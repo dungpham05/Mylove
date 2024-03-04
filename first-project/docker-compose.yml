@@ -1,0 +1,35 @@
+version: "2"
+services:
+  nginx:
+    container_name: nginx-mylove
+    build: ../docker/nginx
+    command: nginx -g "daemon off;"
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - "../docker/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+      - "./products:/var/www/html"
+    links:
+      - php
+      - mysql
+  php:
+    container_name: php-mylove
+    build: ../docker/php
+    volumes:
+      - "./products:/var/www/html"
+      - "~/.ssh:/root/.ssh"
+    working_dir: "/var/www/html"
+  mysql:
+    container_name: mysql-mylove
+    build: ../docker/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=my_database
+      - MYSQL_USER=my_user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - "./databases:/var/lib/mysql"
