@@ -16,6 +16,8 @@ services:
   php:
     container_name: php-mylove
     build: ../docker/php
+    ports:
+      - "3000:3000"
     volumes:
       - "./products:/var/www/html"
       - "~/.ssh:/root/.ssh"
